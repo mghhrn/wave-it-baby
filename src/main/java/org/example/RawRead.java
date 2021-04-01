@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
 
 public class RawRead {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, WavFileException {
         File file = new File("/home/meti/Music/Pink Noise/pink_88k_-3dBFS.wav");
         FileInputStream fileInputStream = new FileInputStream(file);
 
@@ -85,5 +85,27 @@ public class RawRead {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        System.out.println("------------------------");
+        WavFile wavFile = WavFile.openWavFile(new File("/home/meti/Music/Pink Noise/pink_88k_-3dBFS.wav"));
+        int[] buf = new int[20];
+        wavFile.readFrames(buf, 20);
+        for (int i = 0 ; i < buf.length ; i++) {
+            System.out.println("read from WavFile, frame " + i + ": " + buf[i]);
+        }
+        wavFile.close();
+
+        wavFile = WavFile.openWavFile(new File("/home/meti/Music/Pink Noise/pink_88k_-3dBFS.wav"));
+        System.out.println("------------------------");
+        double[] dBuf = new double[20];
+        wavFile.readFrames(dBuf, 20);
+        for (int i = 0 ; i < dBuf.length ; i++) {
+            System.out.println("read from WavFile, frame " + i + ": " + dBuf[i]);
+        }
+        wavFile.close();
+
+        System.out.println("----------------------");
+        System.out.println("Manual calculation for sample #4: " + (double)-2441/(double)32768);
     }
 }
