@@ -4,6 +4,7 @@ import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class App {
 
@@ -18,11 +19,23 @@ public class App {
 
             long FFT_SIZE = wavFile.getNumFrames() / 2;
             DoubleFFT_1D fft = new DoubleFFT_1D(FFT_SIZE);
-            fft.realForward(buffer);
+            fft.realForwardFull(buffer);
+
+            System.out.println("After read forward full:");
+            for (int i = 0 ; i < 30 ; i++) {
+                System.out.println(buffer[i]);
+            }
+
+//            File csvOutputFile = new File("/home/meti/Music/fft_values.csv");
+//            try (PrintWriter pw = new PrintWriter(csvOutputFile)){
+//                for (int i = 0 ; i < buffer.length ; i++) {
+//                    pw.println(buffer[i]);
+//                }
+//            }
 
             //Define the frequencies of interest
-            float freqMin = 10000;
-            float freqMax = 16000;
+            float freqMin = 5000;
+            float freqMax = 6000;
 
             //Loop through the fft bins and filter frequencies
             for(int fftBin = 0; fftBin < FFT_SIZE; fftBin++){
@@ -31,7 +44,7 @@ public class App {
 
                 //Now filter the audio, I'm assuming you wanted to keep the
                 //frequencies of interest rather than discard them.
-                if(frequency  < freqMin || frequency > freqMax){
+                if( freqMin < frequency && frequency < freqMax){
                     //Calculate the index where the real and imaginary parts are stored
                     int real = 2 * fftBin;
                     int imaginary = 2 * fftBin + 1;
@@ -42,9 +55,11 @@ public class App {
                 }
             }
 
-            fft.realInverse(buffer, false);
-            WavFile outFile = WavFile.newWavFile(new File("/home/meti/Music/Pink Noise/out.wav"), 1, wavFile.getNumFrames(), 16, wavFile.getSampleRate());
-            outFile.writeFrames(buffer, numberOfFrames);
+            fft.complexInverse(buffer, true);
+            WavFile outFile = WavFile.newWavFile(new File("/home/meti/Music/out_realForwardFull_complexInverse_scaled_filtered.wav"), 1, wavFile.getNumFrames()/2, 16, wavFile.getSampleRate());
+            outFile.writeFrames(buffer, numberOfFrames/2);
+            outFile.close();
+            wavFile.close();
 
         } catch (IOException e) {
             e.printStackTrace();

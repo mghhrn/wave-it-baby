@@ -1,9 +1,6 @@
 package org.example;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -104,6 +101,17 @@ public class RawRead {
             System.out.println("read from WavFile, frame " + i + ": " + dBuf[i]);
         }
         wavFile.close();
+
+//        wavFile = WavFile.openWavFile(new File("/home/meti/Music/Pink Noise/pink_88k_-3dBFS.wav"));
+//        File csvOutputFile = new File("/home/meti/Music/Pink Noise/samples.csv");
+//        int[] csvBuffer = new int[(int) wavFile.getNumFrames()];
+//        wavFile.readFrames(csvBuffer, csvBuffer.length);
+//        try (PrintWriter pw = new PrintWriter(csvOutputFile)){
+//            for (int i = 0 ; i < csvBuffer.length ; i++) {
+//                pw.println(i + "," + csvBuffer[i]);
+//            }
+//        }
+//        wavFile.close();
 
         System.out.println("----------------------");
         System.out.println("Manual calculation for sample #4: " + (double)-2441/(double)32768);
