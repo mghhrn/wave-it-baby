@@ -4,7 +4,6 @@ import org.jtransforms.fft.DoubleFFT_1D;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class App {
 
@@ -26,24 +25,16 @@ public class App {
                 System.out.println(buffer[i]);
             }
 
-//            File csvOutputFile = new File("/home/meti/Music/fft_values.csv");
-//            try (PrintWriter pw = new PrintWriter(csvOutputFile)){
-//                for (int i = 0 ; i < buffer.length ; i++) {
-//                    pw.println(buffer[i]);
-//                }
-//            }
-
             //Define the frequencies of interest
             float freqMin = 5000;
             float freqMax = 6000;
 
             //Loop through the fft bins and filter frequencies
             for(int fftBin = 0; fftBin < FFT_SIZE; fftBin++){
-                //Calculate the frequency of this bin assuming a sampling rate of 44,100 Hz
+                //Calculate the frequency of this bin based on the sampling rate of wave file
                 float frequency = (float)fftBin * 88200F / (float)FFT_SIZE;
 
-                //Now filter the audio, I'm assuming you wanted to keep the
-                //frequencies of interest rather than discard them.
+                //Now filter the audio
                 if( freqMin < frequency && frequency < freqMax){
                     //Calculate the index where the real and imaginary parts are stored
                     int real = 2 * fftBin;
