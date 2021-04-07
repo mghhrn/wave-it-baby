@@ -18,7 +18,7 @@ public class App {
 
             long FFT_SIZE = wavFile.getNumFrames() / 2;
             DoubleFFT_1D fft = new DoubleFFT_1D(FFT_SIZE);
-            fft.realForwardFull(buffer);
+            fft.realForward(buffer);
 
             System.out.println("After read forward full:");
             for (int i = 0 ; i < 30 ; i++) {
@@ -46,12 +46,16 @@ public class App {
                 }
             }
 
-            fft.complexInverse(buffer, true);
-            WavFile outFile = WavFile.newWavFile(new File("/home/meti/Music/out_realForwardFull_complexInverse_scaled_filtered.wav"), 1, wavFile.getNumFrames()/2, 16, wavFile.getSampleRate());
+            long startTime = System.currentTimeMillis();
+            fft.realInverse(buffer, true);
+            long endTime = System.currentTimeMillis();
+            System.out.printf("The duration for real inverse is %d seconds!\n", (endTime - startTime)/1000);
+            WavFile outFile = WavFile.newWavFile(new File("/home/meti/Music/out_realFroward_realInverse_scaled_filtered.wav"), 1, wavFile.getNumFrames()/2, 16, wavFile.getSampleRate());
             outFile.writeFrames(buffer, numberOfFrames/2);
             outFile.close();
+            System.out.println("out file closed!");
             wavFile.close();
-
+            System.out.println("wav file closed!");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (WavFileException e) {
